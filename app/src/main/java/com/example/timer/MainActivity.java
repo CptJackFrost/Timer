@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int seconds = 0;
     private boolean isRunning = false;
+    private boolean wasRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +24,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.textViewTimer = findViewById(R.id.textViewTimer);
         if (savedInstanceState != null) {
-            seconds = savedInstanceState.getInt("seconds");
-            isRunning = savedInstanceState.getBoolean("isRunning");
+            this.seconds = savedInstanceState.getInt("seconds");
+            this.isRunning = savedInstanceState.getBoolean("isRunning");
+            this.wasRunning = savedInstanceState.getBoolean("wasRunning");
         }
         runTimer();
     }
@@ -34,6 +36,20 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("seconds", this.seconds);
         outState.putBoolean("isRunning", this.isRunning);
+        outState.putBoolean("wasRunning", this.wasRunning);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.wasRunning = this.isRunning;
+        this.isRunning = false;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.isRunning = this.wasRunning;
     }
 
     public void startTimer(View view) {
